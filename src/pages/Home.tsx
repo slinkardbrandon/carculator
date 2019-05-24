@@ -1,5 +1,5 @@
 import { Grid, Paper, makeStyles, Typography } from "@material-ui/core";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Select } from "../components/Select";
 import { TextField } from "../components/TextField";
 
@@ -17,11 +17,16 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(2)
   },
   title: {
-    paddingBottom: theme.spacing(1)
+    textAlign: "center",
+    paddingTop: theme.spacing(5),
+    paddingBottom: theme.spacing(3)
   },
   calculations: {
     paddingTop: theme.spacing(1),
     marginBottom: theme.spacing(1)
+  },
+  salesTaxTotal: {
+    paddingLeft: theme.spacing(2)
   }
 }));
 
@@ -30,15 +35,27 @@ export const Home = (props: any) => {
   const [modifiedDownPayment, setModifiedDownPayment] = useState(false);
   const [purchasePrice, setPurchasePrice] = useState();
   const [downPayment, setDownPayment] = useState();
-  const [salesTax, setSalesTax] = useState(0.07);
+  const [salesTaxPercentage, setSalesTax] = useState(7);
   const [interestRate, setInterestRate] = useState(5.14);
   const [loanTerm, setLoanTerm] = useState(60);
-  const [insuranceCost, setInsuranceCost] = useState();
+  const [monthlyExpenseCost, setMonthlyExpenseCost] = useState();
+
+  const [salesTaxTotal, setSalesTaxTotal] = useState(0);
+
+  useEffect(() => {
+    if (salesTaxPercentage) {
+      const total = (purchasePrice || 0) * (salesTaxPercentage || 0);
+      setSalesTaxTotal(total / 100);
+    }
+  }, [purchasePrice, salesTaxPercentage]);
+
+  useEffect(() => {
+    if (!modifiedDownPayment) {
+      setDownPayment(((purchasePrice / 100) * 20).toFixed(2));
+    }
+  }, [purchasePrice]);
 
   const handlePurchasePriceChange = (e: any) => {
-    if (!modifiedDownPayment) {
-      setDownPayment((e.target.value / 100) * 20);
-    }
     setPurchasePrice(e.target.value);
   };
   const handleDownPaymentChange = (e: any) => {
@@ -50,22 +67,22 @@ export const Home = (props: any) => {
   const handleSalesTaxChange = (e: any) => setSalesTax(e.target.value);
   const handleInterestRateChange = (e: any) => setInterestRate(e.target.value);
   const handleLoanTermChange = (e: any) => setLoanTerm(e.target.value);
-  const handleInsuranceCostChange = (e: any) =>
-    setInsuranceCost(e.target.value);
+  const handleMonthlyExpenseCostChange = (e: any) =>
+    setMonthlyExpenseCost(e.target.value);
 
   return (
-    <div>
+    <>
+      <Typography variant="h4" role="h1" className={classes.title}>
+        Calculate estimated costs for purchasing your vehicle
+      </Typography>
       <Grid container justify="center" alignItems="center">
-        <Grid item xs={6}>
+        <Grid item xs={12} md={6} lg={4}>
           <Paper className={classes.container}>
             <form className={classes.form} autoComplete="off">
-              <Typography variant="h5" className={classes.title}>
-                Enter costs below to calculate an estimate for purchasing your
-                vehicle
-              </Typography>
               <Grid container>
                 <Grid item xs={12}>
                   <TextField
+                    startAdornment="$"
                     label="Purchase Price"
                     value={purchasePrice}
                     onChange={handlePurchasePriceChange}
@@ -78,19 +95,35 @@ export const Home = (props: any) => {
                   />
 
                   <TextField
+                    startAdornment="$"
                     label="Down Payment"
                     value={downPayment}
                     onChange={handleDownPaymentChange}
                     type="number"
                   />
 
-                  <TextField
-                    label="State Sales Tax Rate"
-                    value={salesTax}
-                    onChange={handleSalesTaxChange}
-                    type="number"
-                    endAdornment="%"
-                  />
+                  <Grid container>
+                    <Grid item xs={6}>
+                      <TextField
+                        label="Sales Tax Rate"
+                        value={salesTaxPercentage}
+                        onChange={handleSalesTaxChange}
+                        type="number"
+                        endAdornment="%"
+                      />
+                    </Grid>
+                    <Grid
+                      container
+                      item
+                      xs={6}
+                      alignItems="center"
+                      className={classes.salesTaxTotal}
+                    >
+                      <Typography variant="h6">{`$ ${
+                        salesTaxTotal ? salesTaxTotal.toFixed(2) : 0
+                      }`}</Typography>
+                    </Grid>
+                  </Grid>
 
                   <TextField
                     label="Interest Rate"
@@ -113,10 +146,11 @@ export const Home = (props: any) => {
                   />
 
                   <TextField
-                    label="Monthly Insurance Cost"
-                    value={insuranceCost}
-                    onChange={handleInsuranceCostChange}
+                    label="Other monthly expenses"
+                    value={monthlyExpenseCost}
+                    onChange={handleMonthlyExpenseCostChange}
                     type="number"
+                    helperText="Any additional monthly costs such as insurance, maintenance, etc"
                   />
                 </Grid>
               </Grid>
@@ -136,6 +170,6 @@ export const Home = (props: any) => {
           </Paper>
         </Grid>
       </Grid>
-    </div>
+    </>
   );
 };
