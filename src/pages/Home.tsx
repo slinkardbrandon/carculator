@@ -18,6 +18,10 @@ const useStyles = makeStyles(theme => ({
   },
   title: {
     paddingBottom: theme.spacing(1)
+  },
+  calculations: {
+    paddingTop: theme.spacing(1),
+    marginBottom: theme.spacing(1)
   }
 }));
 
@@ -29,6 +33,7 @@ export const Home = (props: any) => {
   const [salesTax, setSalesTax] = useState(0.07);
   const [interestRate, setInterestRate] = useState(5.14);
   const [loanTerm, setLoanTerm] = useState(60);
+  const [insuranceCost, setInsuranceCost] = useState();
 
   const handlePurchasePriceChange = (e: any) => {
     if (!modifiedDownPayment) {
@@ -45,6 +50,8 @@ export const Home = (props: any) => {
   const handleSalesTaxChange = (e: any) => setSalesTax(e.target.value);
   const handleInterestRateChange = (e: any) => setInterestRate(e.target.value);
   const handleLoanTermChange = (e: any) => setLoanTerm(e.target.value);
+  const handleInsuranceCostChange = (e: any) =>
+    setInsuranceCost(e.target.value);
 
   return (
     <div>
@@ -104,6 +111,25 @@ export const Home = (props: any) => {
                     onChange={handleLoanTermChange}
                     value={loanTerm}
                   />
+
+                  <TextField
+                    label="Monthly Insurance Cost"
+                    value={insuranceCost}
+                    onChange={handleInsuranceCostChange}
+                    type="number"
+                  />
+                </Grid>
+              </Grid>
+
+              <Grid
+                container
+                className={`${classes.container} ${classes.calculations}`}
+              >
+                <Grid item xs={6}>
+                  <Typography variant="h6">Cash Down:</Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography variant="h6"> Monthly Payment:</Typography>
                 </Grid>
               </Grid>
             </form>
