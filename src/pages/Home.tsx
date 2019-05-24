@@ -1,33 +1,33 @@
-import { Grid, Paper, makeStyles, Typography } from "@material-ui/core";
-import React, { useState, useEffect } from "react";
-import { Select } from "../components/Select";
-import { TextField } from "../components/TextField";
+import { Grid, Paper, makeStyles, Typography } from '@material-ui/core';
+import React, { useState, useEffect } from 'react';
+import { Select } from '../components/Select';
+import { TextField } from '../components/TextField';
 
 const useStyles = makeStyles(theme => ({
   container: {
-    display: "flex",
-    flexWrap: "wrap",
+    display: 'flex',
+    flexWrap: 'wrap',
     marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(2)
+    marginBottom: theme.spacing(2),
   },
   form: {
-    display: "flex",
-    flexDirection: "column",
-    width: "100%",
-    padding: theme.spacing(2)
+    display: 'flex',
+    flexDirection: 'column',
+    width: '100%',
+    padding: theme.spacing(2),
   },
   title: {
-    textAlign: "center",
+    textAlign: 'center',
     paddingTop: theme.spacing(5),
-    paddingBottom: theme.spacing(3)
+    paddingBottom: theme.spacing(3),
   },
   calculations: {
     paddingTop: theme.spacing(1),
-    marginBottom: theme.spacing(1)
+    marginBottom: theme.spacing(1),
   },
   salesTaxTotal: {
-    paddingLeft: theme.spacing(2)
-  }
+    paddingLeft: theme.spacing(2),
+  },
 }));
 
 export const Home = (props: any) => {
@@ -55,9 +55,7 @@ export const Home = (props: any) => {
     }
   }, [purchasePrice]);
 
-  const handlePurchasePriceChange = (e: any) => {
-    setPurchasePrice(e.target.value);
-  };
+  const handlePurchasePriceChange = (e: any) => setPurchasePrice(e.target.value);
   const handleDownPaymentChange = (e: any) => {
     if (!modifiedDownPayment) {
       setModifiedDownPayment(true);
@@ -67,8 +65,7 @@ export const Home = (props: any) => {
   const handleSalesTaxChange = (e: any) => setSalesTax(e.target.value);
   const handleInterestRateChange = (e: any) => setInterestRate(e.target.value);
   const handleLoanTermChange = (e: any) => setLoanTerm(e.target.value);
-  const handleMonthlyExpenseCostChange = (e: any) =>
-    setMonthlyExpenseCost(e.target.value);
+  const handleMonthlyExpenseCostChange = (e: any) => setMonthlyExpenseCost(e.target.value);
 
   return (
     <>
@@ -89,7 +86,7 @@ export const Home = (props: any) => {
                     type="number"
                     helperText={
                       !modifiedDownPayment
-                        ? "The down payment will be calculated at 20% of purchase price unless the input is modified"
+                        ? 'The down payment will be calculated at 20% of purchase price unless the input is modified'
                         : undefined
                     }
                   />
@@ -135,11 +132,11 @@ export const Home = (props: any) => {
 
                   <Select
                     options={[
-                      { value: 24, text: "2 Years" },
-                      { value: 36, text: "3 Years" },
-                      { value: 48, text: "4 Years" },
-                      { value: 60, text: "5 Years" },
-                      { value: 72, text: "6 Years" }
+                      { value: 24, text: '2 Years' },
+                      { value: 36, text: '3 Years' },
+                      { value: 48, text: '4 Years' },
+                      { value: 60, text: '5 Years' },
+                      { value: 72, text: '6 Years' },
                     ]}
                     onChange={handleLoanTermChange}
                     value={loanTerm}
@@ -155,10 +152,7 @@ export const Home = (props: any) => {
                 </Grid>
               </Grid>
 
-              <Grid
-                container
-                className={`${classes.container} ${classes.calculations}`}
-              >
+              <Grid container className={`${classes.container} ${classes.calculations}`}>
                 <Grid item xs={6}>
                   <Typography variant="h6">Cash Down:</Typography>
                 </Grid>
