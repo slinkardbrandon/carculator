@@ -12,6 +12,7 @@ import {
 import React, { useState, useEffect } from 'react';
 import { Select } from '../components/Select';
 import { TextField } from '../components/TextField';
+import { Calculator } from '../Calculator';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -41,34 +42,35 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export const Home = (props: any) => {
-  const classes = useStyles();
   const [modifiedDownPayment, setModifiedDownPayment] = useState(false);
   const [purchasePrice, setPurchasePrice] = useState();
   const [downPayment, setDownPayment] = useState();
   const [salesTaxPercentage, setSalesTax] = useState(7);
   const [interestRate, setInterestRate] = useState(5.14);
   const [loanTerm, setLoanTerm] = useState(60);
-  const [monthlyExpenseCost, setMonthlyExpenseCost] = useState();
-
+  const [monthlyExpenseCost, setMonthlyExpenseCost] = useState(0);
   const [salesTaxTotal, setSalesTaxTotal] = useState(0);
   const [cashDownTotal, setCashDownTotal] = useState(0);
 
+  const calculator = new Calculator(purchasePrice, salesTaxPercentage);
+
   useEffect(() => {
-    if (salesTaxPercentage) {
-      const total = (purchasePrice || 0) * (salesTaxPercentage || 0);
-      setSalesTaxTotal(total / 100);
-    }
+    setSalesTaxTotal(calculator.salesTaxTotal);
   }, [purchasePrice, salesTaxPercentage]);
 
   useEffect(() => {
     if (!modifiedDownPayment) {
-      setDownPayment(((purchasePrice / 100) * 20).toFixed(2));
+      setDownPayment((purchasePrice / 100) * 20);
     }
   }, [purchasePrice]);
 
   useEffect(() => {
-    setCashDownTotal((salesTaxTotal || 0) + (parseFloat(downPayment) || 0));
+    if (downPayment) {
+      setCashDownTotal((salesTaxTotal || 0) + (parseFloat(downPayment.toFixed(2)) || 0));
+    }
   }, [downPayment, salesTaxTotal]);
+
+  useEffect(() => {}, []);
 
   const handlePurchasePriceChange = (e: any) => setPurchasePrice(e.target.value);
   const handleDownPaymentChange = (e: any) => {
@@ -82,6 +84,7 @@ export const Home = (props: any) => {
   const handleLoanTermChange = (e: any) => setLoanTerm(e.target.value);
   const handleMonthlyExpenseCostChange = (e: any) => setMonthlyExpenseCost(e.target.value);
 
+  const classes = useStyles();
   return (
     <>
       <Typography variant="h4" role="h1" className={classes.title}>
@@ -147,6 +150,7 @@ export const Home = (props: any) => {
                   />
 
                   <TextField
+                    startAdornment="$"
                     label="Other monthly expenses"
                     value={monthlyExpenseCost}
                     onChange={handleMonthlyExpenseCostChange}
