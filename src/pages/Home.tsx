@@ -1,4 +1,14 @@
-import { Grid, Paper, makeStyles, Typography } from '@material-ui/core';
+import {
+  Grid,
+  Paper,
+  makeStyles,
+  Typography,
+  Table,
+  TableHead,
+  TableRow,
+  TableBody,
+  TableCell,
+} from '@material-ui/core';
 import React, { useState, useEffect } from 'react';
 import { Select } from '../components/Select';
 import { TextField } from '../components/TextField';
@@ -41,6 +51,7 @@ export const Home = (props: any) => {
   const [monthlyExpenseCost, setMonthlyExpenseCost] = useState();
 
   const [salesTaxTotal, setSalesTaxTotal] = useState(0);
+  const [cashDownTotal, setCashDownTotal] = useState(0);
 
   useEffect(() => {
     if (salesTaxPercentage) {
@@ -54,6 +65,10 @@ export const Home = (props: any) => {
       setDownPayment(((purchasePrice / 100) * 20).toFixed(2));
     }
   }, [purchasePrice]);
+
+  useEffect(() => {
+    setCashDownTotal((salesTaxTotal || 0) + (parseFloat(downPayment) || 0));
+  }, [downPayment, salesTaxTotal]);
 
   const handlePurchasePriceChange = (e: any) => setPurchasePrice(e.target.value);
   const handleDownPaymentChange = (e: any) => {
@@ -100,7 +115,7 @@ export const Home = (props: any) => {
                   />
 
                   <Grid container>
-                    <Grid item xs={6}>
+                    <Grid item xs={12}>
                       <TextField
                         label="Sales Tax Rate"
                         value={salesTaxPercentage}
@@ -108,17 +123,6 @@ export const Home = (props: any) => {
                         type="number"
                         endAdornment="%"
                       />
-                    </Grid>
-                    <Grid
-                      container
-                      item
-                      xs={6}
-                      alignItems="center"
-                      className={classes.salesTaxTotal}
-                    >
-                      <Typography variant="h6">{`$ ${
-                        salesTaxTotal ? salesTaxTotal.toFixed(2) : 0
-                      }`}</Typography>
                     </Grid>
                   </Grid>
 
@@ -153,11 +157,21 @@ export const Home = (props: any) => {
               </Grid>
 
               <Grid container className={`${classes.container} ${classes.calculations}`}>
-                <Grid item xs={6}>
-                  <Typography variant="h6">Cash Down:</Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography variant="h6"> Monthly Payment:</Typography>
+                <Grid item xs={12}>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Cash Down</TableCell>
+                        <TableCell>Monthly Payment</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      <TableRow>
+                        <TableCell>$ {cashDownTotal.toFixed(2)}</TableCell>
+                        <TableCell>$ {cashDownTotal.toFixed(2)}</TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
                 </Grid>
               </Grid>
             </form>
