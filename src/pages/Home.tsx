@@ -14,34 +14,7 @@ import { Select } from '../components/Select';
 import { TextField } from '../components/TextField';
 import { Calculator } from '../Calculator';
 
-const useStyles = makeStyles(theme => ({
-  container: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(2),
-  },
-  form: {
-    display: 'flex',
-    flexDirection: 'column',
-    width: '100%',
-    padding: theme.spacing(2),
-  },
-  title: {
-    textAlign: 'center',
-    paddingTop: theme.spacing(5),
-    paddingBottom: theme.spacing(3),
-  },
-  calculations: {
-    paddingTop: theme.spacing(1),
-    marginBottom: theme.spacing(1),
-  },
-  salesTaxTotal: {
-    paddingLeft: theme.spacing(2),
-  },
-}));
-
-export const Home = (props: any) => {
+export const Home = () => {
   const [modifiedDownPayment, setModifiedDownPayment] = useState(false);
   const [purchasePrice, setPurchasePrice] = useState();
   const [downPayment, setDownPayment] = useState();
@@ -51,16 +24,17 @@ export const Home = (props: any) => {
   const [monthlyExpenseCost, setMonthlyExpenseCost] = useState(0);
   const [salesTaxTotal, setSalesTaxTotal] = useState(0);
   const [cashDownTotal, setCashDownTotal] = useState(0);
+  const [monthlyPayment, setMonthlyPayment] = useState(0);
 
-  const calculator = new Calculator(purchasePrice, salesTaxPercentage);
+  const calculator = new Calculator({ purchasePrice, salesTaxPercentage });
 
   useEffect(() => {
-    setSalesTaxTotal(calculator.salesTaxTotal);
+    setSalesTaxTotal(calculator.calculateSalesTaxTotal());
   }, [purchasePrice, salesTaxPercentage]);
 
   useEffect(() => {
     if (!modifiedDownPayment) {
-      setDownPayment((purchasePrice / 100) * 20);
+      setDownPayment(calculator.calculateDownPayment());
     }
   }, [purchasePrice]);
 
@@ -70,7 +44,10 @@ export const Home = (props: any) => {
     }
   }, [downPayment, salesTaxTotal]);
 
-  useEffect(() => {}, []);
+  // Where the magic happens
+  useEffect(() => {
+    setMonthlyPayment(calculator.calculateMonthlyPayment());
+  }, [purchasePrice, downPayment, salesTaxPercentage, interestRate, loanTerm, monthlyExpenseCost]);
 
   const handlePurchasePriceChange = (e: any) => setPurchasePrice(e.target.value);
   const handleDownPaymentChange = (e: any) => {
@@ -118,13 +95,22 @@ export const Home = (props: any) => {
                   />
 
                   <Grid container>
-                    <Grid item xs={12}>
+                    <Grid item xs={6}>
                       <TextField
                         label="Sales Tax Rate"
                         value={salesTaxPercentage}
                         onChange={handleSalesTaxChange}
                         type="number"
                         endAdornment="%"
+                      />
+                    </Grid>
+                    <Grid item xs={6}>
+                      <TextField
+                        startAdornment="$"
+                        disabled
+                        label="Sales Tax Total"
+                        value={salesTaxPercentage}
+                        type="number"
                       />
                     </Grid>
                   </Grid>
@@ -172,7 +158,7 @@ export const Home = (props: any) => {
                     <TableBody>
                       <TableRow>
                         <TableCell>$ {cashDownTotal.toFixed(2)}</TableCell>
-                        <TableCell>$ {cashDownTotal.toFixed(2)}</TableCell>
+                        <TableCell>$ {monthlyPayment.toFixed(2)}</TableCell>
                       </TableRow>
                     </TableBody>
                   </Table>
@@ -185,3 +171,30 @@ export const Home = (props: any) => {
     </>
   );
 };
+
+const useStyles = makeStyles(theme => ({
+  container: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
+  },
+  form: {
+    display: 'flex',
+    flexDirection: 'column',
+    width: '100%',
+    padding: theme.spacing(2),
+  },
+  title: {
+    textAlign: 'center',
+    paddingTop: theme.spacing(5),
+    paddingBottom: theme.spacing(3),
+  },
+  calculations: {
+    paddingTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
+  },
+  salesTaxTotal: {
+    paddingLeft: theme.spacing(2),
+  },
+}));

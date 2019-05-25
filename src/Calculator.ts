@@ -1,23 +1,50 @@
 import math from 'mathjs';
 
-export class Calculator {
-  public readonly salesTaxTotal: number = 0;
+export interface ICalculatorConstructorParameters {
+  purchasePrice?: number;
+  salesTaxPercentage?: number;
+  interestRate?: number;
+  downPayment?: number;
+}
 
-  constructor(public purchasePrice: number = 0, public salesTaxPercentage: number = 0) {
+export class Calculator {
+  public readonly purchasePrice: number = 0;
+  public readonly salesTaxPercentage: number = 0;
+  public readonly interestRate: number = 0;
+
+  public downPayment: number = 0;
+
+  constructor({
+    purchasePrice,
+    salesTaxPercentage,
+    interestRate,
+    downPayment,
+  }: ICalculatorConstructorParameters) {
+    this.purchasePrice = purchasePrice || 0;
+    this.salesTaxPercentage = salesTaxPercentage || 0;
+    this.interestRate = interestRate || 0;
+    this.downPayment = downPayment || 0;
+  }
+
+  public calculateSalesTaxTotal(): number {
     // Sales Tax Total is (PurchasePrice * the decimal conversion of sales tax percentage)
-    this.salesTaxTotal = math.multiply(purchasePrice, math.divide(salesTaxPercentage, 100));
+    return math.multiply(this.purchasePrice, math.divide(this.salesTaxPercentage, 100));
   }
 
   public calculateDownPayment(): number {
-    return 0;
+    return math.multiply(this.purchasePrice, 0.2);
   }
 
   public calculateMonthlyPayment(): number {
     // =(( Total Price - Down Payment) * Monthly Interest Rate * (1 + Monthly Interest  Rate)^ Term) / ((1 + Monthly Interest Rate)^Term - 1)
-    const amountToBorrow = math.subtract(this.purchasePrice, this.salesTaxPercentage);
+    const amountToBorrow = math.subtract(this.purchasePrice, this.downPayment);
 
-    console.log(amountToBorrow);
+    console.log(`${this.purchasePrice} - ${this.downPayment} =`, amountToBorrow);
 
+    return 0;
+  }
+
+  public calculateMonthlyInterestRate(): number {
     return 0;
   }
 }

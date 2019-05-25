@@ -1,14 +1,15 @@
-import React from "react";
-import { TextField as MuiTextField, InputAdornment } from "@material-ui/core";
+import React from 'react';
+import { TextField as MuiTextField, InputAdornment } from '@material-ui/core';
 
 interface ITextFieldProps {
   label: string;
   value: string | number;
   endAdornment?: string;
   startAdornment?: string;
-  onChange: (e: any) => void;
-  type?: "text" | "number";
+  onChange?: (e: any) => void;
+  type?: 'text' | 'number';
   helperText?: string;
+  disabled?: boolean;
 }
 
 export const TextField = ({
@@ -18,11 +19,13 @@ export const TextField = ({
   startAdornment,
   onChange,
   type,
-  helperText
+  helperText,
+  disabled,
 }: ITextFieldProps) => {
   return (
     <MuiTextField
       fullWidth
+      disabled={disabled}
       label={label}
       value={value}
       onChange={onChange}
@@ -40,7 +43,7 @@ export const TextField = ({
           <InputAdornment position="start">{startAdornment}</InputAdornment>
         ) : (
           undefined
-        )
+        ),
       }}
     />
   );
