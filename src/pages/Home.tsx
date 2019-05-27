@@ -1,14 +1,4 @@
-import {
-  Grid,
-  Paper,
-  makeStyles,
-  Typography,
-  Table,
-  TableHead,
-  TableRow,
-  TableBody,
-  TableCell,
-} from '@material-ui/core';
+import { Grid, Paper, makeStyles, Typography } from '@material-ui/core';
 import React, { useState, useEffect } from 'react';
 import { Select } from '../components/Select';
 import { TextField } from '../components/TextField';
@@ -161,21 +151,15 @@ export const Home = () => {
               </Grid>
 
               <Grid container className={`${classes.container} ${classes.calculations}`}>
-                <Grid item xs={12}>
-                  <Table>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Cash Down</TableCell>
-                        <TableCell>Monthly Payment</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      <TableRow>
-                        <TableCell>$ {cashDownTotal.toFixed(2)}</TableCell>
-                        <TableCell>$ {monthlyPayment.toFixed(2)}</TableCell>
-                      </TableRow>
-                    </TableBody>
-                  </Table>
+                <Grid item xs={12} sm={6}>
+                  <Typography variant="subtitle2">Cash Needed</Typography>
+                  <Typography variant="h4">$ {cashDownTotal.toFixed(2)}</Typography>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <Typography variant="subtitle2">Monthly Payment</Typography>
+                  <Typography variant="h4" style={{ animation: 'spinit 0.2s 5' }}>
+                    $ {monthlyPayment.toFixed(2)}
+                  </Typography>
                 </Grid>
               </Grid>
             </form>
