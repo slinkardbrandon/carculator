@@ -21,7 +21,7 @@ export const Home = () => {
   const [salesTaxPercentage, setSalesTax] = useState(7);
   const [annualInterestRate, setAnnualInterestRate] = useState(5.14);
   const [loanTerm, setLoanTerm] = useState(60);
-  const [monthlyExpenseCost, setMonthlyExpenseCost] = useState(0);
+  const [monthlyExpenseCost, setMonthlyExpenseCost] = useState();
   const [salesTaxTotal, setSalesTaxTotal] = useState(0);
   const [cashDownTotal, setCashDownTotal] = useState(0);
   const [monthlyPayment, setMonthlyPayment] = useState(0);
@@ -32,6 +32,7 @@ export const Home = () => {
     downPayment,
     annualInterestRate,
     loanTerm,
+    monthlyExpenseCost,
   });
 
   useEffect(() => {
@@ -45,7 +46,7 @@ export const Home = () => {
   }, [purchasePrice]);
 
   useEffect(() => {
-    if (downPayment) {
+    if (downPayment !== undefined) {
       setCashDownTotal((salesTaxTotal || 0) + (parseFloat(downPayment.toFixed(2)) || 0));
     }
   }, [downPayment, salesTaxTotal]);
@@ -62,17 +63,17 @@ export const Home = () => {
     monthlyExpenseCost,
   ]);
 
-  const handlePurchasePriceChange = (e: any) => setPurchasePrice(e.target.value);
+  const handlePurchasePriceChange = (e: any) => setPurchasePrice(Number(e.target.value));
   const handleDownPaymentChange = (e: any) => {
     if (!modifiedDownPayment) {
       setModifiedDownPayment(true);
     }
-    setDownPayment(e.target.value);
+    setDownPayment(Number(e.target.value));
   };
-  const handleSalesTaxChange = (e: any) => setSalesTax(e.target.value);
-  const handleInterestRateChange = (e: any) => setAnnualInterestRate(e.target.value);
-  const handleLoanTermChange = (e: any) => setLoanTerm(e.target.value);
-  const handleMonthlyExpenseCostChange = (e: any) => setMonthlyExpenseCost(e.target.value);
+  const handleSalesTaxChange = (e: any) => setSalesTax(Number(e.target.value));
+  const handleInterestRateChange = (e: any) => setAnnualInterestRate(Number(e.target.value));
+  const handleLoanTermChange = (e: any) => setLoanTerm(Number(e.target.value));
+  const handleMonthlyExpenseCostChange = (e: any) => setMonthlyExpenseCost(Number(e.target.value));
 
   const classes = useStyles();
   return (
@@ -89,7 +90,7 @@ export const Home = () => {
                   <TextField
                     startAdornment="$"
                     label="Purchase Price"
-                    value={purchasePrice}
+                    value={purchasePrice !== undefined ? purchasePrice : ''}
                     onChange={handlePurchasePriceChange}
                     type="number"
                     helperText={
@@ -102,7 +103,7 @@ export const Home = () => {
                   <TextField
                     startAdornment="$"
                     label="Down Payment"
-                    value={downPayment}
+                    value={downPayment !== undefined ? downPayment : ''}
                     onChange={handleDownPaymentChange}
                     type="number"
                   />
@@ -151,7 +152,7 @@ export const Home = () => {
                   <TextField
                     startAdornment="$"
                     label="Other monthly expenses"
-                    value={monthlyExpenseCost}
+                    value={monthlyExpenseCost !== undefined ? monthlyExpenseCost : ''}
                     onChange={handleMonthlyExpenseCostChange}
                     type="number"
                     helperText="Any additional monthly costs such as insurance, maintenance, etc"

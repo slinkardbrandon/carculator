@@ -6,6 +6,7 @@ export interface ICalculatorConstructorParameters {
   annualInterestRate?: number;
   downPayment?: number;
   loanTerm?: number;
+  monthlyExpenseCost?: number;
 }
 
 export class Calculator {
@@ -13,6 +14,7 @@ export class Calculator {
   public readonly salesTaxPercentage: number = 0;
   public readonly annualInterestRate: number = 0;
   public readonly loanTerm: number = 0;
+  public readonly monthlyExpenseCost: number = 0;
 
   public downPayment: number = 0;
 
@@ -22,12 +24,14 @@ export class Calculator {
     annualInterestRate,
     downPayment,
     loanTerm,
+    monthlyExpenseCost,
   }: ICalculatorConstructorParameters) {
     this.purchasePrice = purchasePrice || 0;
     this.salesTaxPercentage = salesTaxPercentage || 0;
     this.annualInterestRate = annualInterestRate || 0;
     this.downPayment = downPayment || 0;
     this.loanTerm = loanTerm || 60;
+    this.monthlyExpenseCost = monthlyExpenseCost || 0;
   }
 
   public calculateSalesTaxTotal(): number {
@@ -45,7 +49,7 @@ export class Calculator {
     const amountToBorrow = math.subtract(this.purchasePrice, this.downPayment) as number;
     const monthlyInterestRateDecimal = math.divide(this.calculateMonthlyInterestRate(), 100);
 
-    return math.multiply(
+    const amountOwned = math.multiply(
       amountToBorrow,
       math.divide(
         math.multiply(
@@ -55,6 +59,8 @@ export class Calculator {
         math.subtract(math.pow(math.add(1, monthlyInterestRateDecimal), this.loanTerm), 1) as number
       )
     );
+
+    return math.add(amountOwned, this.monthlyExpenseCost) as number;
   }
 
   public calculateMonthlyInterestRate(): number {
