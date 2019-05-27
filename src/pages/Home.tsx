@@ -19,14 +19,20 @@ export const Home = () => {
   const [purchasePrice, setPurchasePrice] = useState();
   const [downPayment, setDownPayment] = useState();
   const [salesTaxPercentage, setSalesTax] = useState(7);
-  const [interestRate, setInterestRate] = useState(5.14);
+  const [annualInterestRate, setAnnualInterestRate] = useState(5.14);
   const [loanTerm, setLoanTerm] = useState(60);
   const [monthlyExpenseCost, setMonthlyExpenseCost] = useState(0);
   const [salesTaxTotal, setSalesTaxTotal] = useState(0);
   const [cashDownTotal, setCashDownTotal] = useState(0);
   const [monthlyPayment, setMonthlyPayment] = useState(0);
 
-  const calculator = new Calculator({ purchasePrice, salesTaxPercentage });
+  const calculator = new Calculator({
+    purchasePrice,
+    salesTaxPercentage,
+    downPayment,
+    annualInterestRate,
+    loanTerm,
+  });
 
   useEffect(() => {
     setSalesTaxTotal(calculator.calculateSalesTaxTotal());
@@ -47,7 +53,14 @@ export const Home = () => {
   // Where the magic happens
   useEffect(() => {
     setMonthlyPayment(calculator.calculateMonthlyPayment());
-  }, [purchasePrice, downPayment, salesTaxPercentage, interestRate, loanTerm, monthlyExpenseCost]);
+  }, [
+    purchasePrice,
+    downPayment,
+    salesTaxPercentage,
+    annualInterestRate,
+    loanTerm,
+    monthlyExpenseCost,
+  ]);
 
   const handlePurchasePriceChange = (e: any) => setPurchasePrice(e.target.value);
   const handleDownPaymentChange = (e: any) => {
@@ -57,7 +70,7 @@ export const Home = () => {
     setDownPayment(e.target.value);
   };
   const handleSalesTaxChange = (e: any) => setSalesTax(e.target.value);
-  const handleInterestRateChange = (e: any) => setInterestRate(e.target.value);
+  const handleInterestRateChange = (e: any) => setAnnualInterestRate(e.target.value);
   const handleLoanTermChange = (e: any) => setLoanTerm(e.target.value);
   const handleMonthlyExpenseCostChange = (e: any) => setMonthlyExpenseCost(e.target.value);
 
@@ -94,7 +107,7 @@ export const Home = () => {
                     type="number"
                   />
 
-                  <Grid container>
+                  <Grid container spacing={2}>
                     <Grid item xs={6}>
                       <TextField
                         label="Sales Tax Rate"
@@ -109,7 +122,7 @@ export const Home = () => {
                         startAdornment="$"
                         disabled
                         label="Sales Tax Total"
-                        value={salesTaxPercentage}
+                        value={salesTaxTotal}
                         type="number"
                       />
                     </Grid>
@@ -117,7 +130,7 @@ export const Home = () => {
 
                   <TextField
                     label="Interest Rate"
-                    value={interestRate}
+                    value={annualInterestRate}
                     onChange={handleInterestRateChange}
                     type="number"
                     endAdornment="%"
@@ -195,6 +208,6 @@ const useStyles = makeStyles(theme => ({
     marginBottom: theme.spacing(1),
   },
   salesTaxTotal: {
-    paddingLeft: theme.spacing(2),
+    marginLeft: theme.spacing(2),
   },
 }));

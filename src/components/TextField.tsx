@@ -10,6 +10,8 @@ interface ITextFieldProps {
   type?: 'text' | 'number';
   helperText?: string;
   disabled?: boolean;
+  className?: string;
+  fullWidth?: boolean;
 }
 
 export const TextField = ({
@@ -21,10 +23,13 @@ export const TextField = ({
   type,
   helperText,
   disabled,
+  className,
+  fullWidth,
 }: ITextFieldProps) => {
   return (
     <MuiTextField
-      fullWidth
+      fullWidth={fullWidth === undefined || fullWidth === true}
+      className={className}
       disabled={disabled}
       label={label}
       value={value}
